@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        *{
+            box-sizing: inherit;
+        }
+
+        html {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #c0c0c0;
+            font-family: 'Varela Round', sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            min-block-size: 100vh;
+
+        }
+
+        input {
+            background-image: none;
+            border: none;
+            font:inherit;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s;
+        }
+
+        svg {
+            height: auto;
+            max-width: 100%;
+            vertical-align: middle;
+        }
+
+        /*----ALIGN----*/
+
+        .align {
+            display: grid;
+            place-items: center;
+        }
+
+        /*----BUTTON----*/
+
+        .button {
+            background-color: #33cc77;
+            color: #fff;
+            padding: 0.25em 1.5em;
+        }
+
+        .button:focus,
+        .button:hover {
+            background-color: #33cc77;
+        }
+
+        /*----ICONS----*/
+
+        .icons {
+            display: none;
+        }
+
+        .icon {
+            fill: currentColor;
+            display: inline-block;
+            height: 1em;
+            width: 1em;
+        }
+
+        /*----register----*/
+
+        .register {
+            width: 400px;
+        }
+
+        .register__header {
+            background-color: rgba(0,60,136,.8);
+            border-top-left-radius: 1.25em;
+            border-top-right-radius: 1.25em;
+            color: #fff;
+            padding: 1.25em 1.625em;
+        }
+
+        .register__header:first-child {
+            margin-top: 0;
+        }
+
+        .register__header:last-child {
+            margin-bottom: 0;
+        }
+
+        .register h2 .icon {
+            margin-right: 14px;
+        }
+
+        .register__form {
+            background-color: #fff;
+            border-bottom-left-radius: 1.25em;
+            border-bottom-right-radius: 1.25em;
+            color: #777;
+            display: grid;
+            gap: 0.875em;
+            padding: 1.25em 1.625em;
+        }
+
+        .register input {
+            border-radius: 0.1875em;
+        }
+
+        .register input[type = 'username'],
+        .register input[type = 'password'] {
+            background-color: #eee;
+            color: #777;
+            padding: 0.25em 0.625em;
+            width: 100%;
+        }
+
+        .register input[type ='submit'] {
+            display: block;
+            margin: 0 auto;
+        }
+
+
+    </style>
+</head>
+<body class="align">
+    <div class="register">
+
+         <header class="register__header">
+            <h2>
+                Register
+            </h2>
+        </header>
+
+
+        <form class='register__form' method='POST'>
+        {% csrf_token %}
+        <div>
+            <label for="username">Username</label>
+            <input type="username" id="username" name="username" placeholder="username">
+        </div>
+
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password1" placeholder="password">
+        </div>
+
+        <div>
+            <label for="password2">Password</label>
+            <input type="password" id="password2" name="password2" placeholder="Configartion">
+        </div>
+
+        <div>
+            <input class="button" type="submit" value="Register">
+        </div>
+        <p>Do you have an account? <a href="/accounts/login/">Login</a></p>
+
+        </form>
+
+
+    </div>
+</body>
+</html>

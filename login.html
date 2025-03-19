@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+ 
+    <link rel="stylesheet" href="{% static 'assets/login_style.css' %}"/>
+   
+ 
+
+
+
+
+
+   
+</head>
+
+<body class="align">
+    
+    <div class="login">
+       <div class="logo_title"></div>
+            <header class="title">
+                 
+                <!-- <h1>
+                   سامانه آتش بان 
+                </h1>   -->
+            </header> 
+      </div>
+
+         <header class="login__header">
+            <h2>
+                ورود
+            </h2>
+        </header>
+
+
+        <form class='login__form' method='POST'>
+        {% csrf_token %}
+        <div>
+            <label for="username">نام کاربری</label>
+            <input type="username" id="username" name="username" placeholder="نام کاربری">
+        </div>
+
+        <div>
+            <label for="password">گذرواژه</label>
+            <input type="password" id="password" name="password" placeholder="گذرواژه">
+        </div>
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li class="errors">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div>
+            <input class="button" type="submit" value="ورود">
+        </div>
+     
+        <p class="password">آیا رمز خود را فراموش کرده اید؟<a href="/register/"></a></p>
+        <p  class="register">حساب کاربری ندارید؟ <a href="/register/">ثبت نام کنید</a></p>
+
+   
+
+        </form>
+
+
+    </div>
+</body>
+</html>
