@@ -1,0 +1,629 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سامانه آتش بان</title>
+    
+    <script src="{% static 'assets/ol/ol.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'assets/ol/ol.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/style.css' %}"/>
+    <link rel="shortcut icon" href="">
+</head>
+<body>
+
+  
+    <div class="drawing-control">
+        <div class="drawing-control__icon drawing-control__icon--toggler"></div>
+        <div class="drawing-control__icon drawing-control__icon--point"></div>
+        <div class="drawing-control__icon drawing-control__icon--line"></div>
+        <div class="drawing-control__icon drawing-control__icon--polygon"></div>
+        <div class="drawing-control__icon drawing-control__icon--finish"></div>
+        <div class="drawing-control__icon drawing-control__icon--clear"></div>
+    </div>
+
+
+    <div class="identify">
+        <div class="identify__icon"></div>
+        <div class="identify__content">
+            <div class="identify__select">
+            </div>
+            <div class="identify__result"></div>
+        </div>
+    </div>
+
+    <div class="measurement-control">
+        <div class="measurement-control__icon measurement-control__icon--toggler"></div>
+        <div class="measurement-control__icon measurement-control__icon--distance"></div>
+        <div class="measurement-control__icon measurement-control__icon--area"></div>
+    </div>
+
+    <div class="tooltip-bottom"></div>
+
+    <div class="search-box">
+        <div class="search-button"></div>
+        <input class="search-input" placeholder=" ...جستجو استان ، شهرستان و "type="text"/>
+    </div>
+
+    <div class="user-button" onclick="location.href='/accounts/logout/'"><ion-icon name="contact"></ion-icon></div>
+ 
+    <div class="sidebar" id="sidebar">
+        
+        <div class="top-icons">
+            <span class="icon" data-tooltip="آتش سوزی فعال" id="fireIcon"><ion-icon name="flame"></ion-icon></span>
+                <p class="head1" id="fireText">آتش سوزی فعال</p>
+                <p class="head1_2" id="fireText2">آخرین به روز رسانی 1403/12/15</p>
+                <div class="filter-container" id="filterContainer">
+
+                    <div class="filter_icon">
+                        <b><p class="filter_text">فیلتر</p></b>
+                    </div>
+                    
+                    <label>تاریخ شروع <input type="date" id="startDate"></label>
+                    <br><br>
+                    <label>تاریخ پایان <input type="date" id="endDate"></label>
+
+                    <label>زمان مشاهده 
+                        <select id="daynight">
+                            <option value="">همه</option>
+                            <option value="D">روز</option>
+                            <option value="N">شب</option>
+                        </select>
+                    </label>
+                    <br>
+                    <label>سنجنده
+                        <select id="satellite">
+                            <option value="">همه</option>
+                            <optgroup label="سنجنده MODIS">
+                                <option value="Terra">Terra</option>
+                                <option value="Aqua">Aqua</option>
+                            </optgroup>
+                            <optgroup label="سنجنده VIIRS">
+                                <option value="N">VIIRS N</option>
+                                <option value="N20">VIIRS N20</option>
+                                <option value="N21">VIIRS N21</option>
+                            </optgroup>
+                        </select>
+                    </label>
+                    <br>
+                    <label>استان
+                        <select id="adm1_en">
+                            <option value="" disabled selected>انتخاب استان</option>
+                            <option value="Alborz">البرز</option>
+                            <option value="Ardabil">اردبیل</option>
+                            <option value="Busheh">بوشهر</option>
+                            <option value="Chaharmahal and Bakhtiari">چهارمحال بختیاری</option>
+                            <option value="East Azerbaijan">آذزبایجان شرقی</option>
+                            <option value="Fars">فارس</option>
+                            <option value="Gilan">گیلان</option>
+                            <option value="Golestan">گلستان</option>
+                            <option value="Hamadan">همدان</option>
+                            <option value="Hormozgan">هرمزگان</option>
+                            <option value="Ilam">ایلام</option>
+                            <option value="Isfahan">اصفهان</option>
+                            <option value="Kerman">کرمان</option>
+                            <option value="Kermanshah">کرمانشاه</option>
+                            <option value="Khuzestan">خوزستان</option>
+                            <option value="Kohgiluyeh and Boyer-Ahmad">کهگیلویه و بویراحمد</option>
+                            <option value="Kurdistan">کردستان</option>
+                            <option value="Lorestan">لرستان</option>
+                            <option value="Markazi">مرکزی</option>
+                            <option value="Mazandaran">مازندران</option>
+                            <option value="North Khorasan">خراسان شمالی</option>
+                            <option value="Qazvin">قزوین</option>
+                            <option value="Qom">قم</option>
+                            <option value="Razavi Khorasan">خراسان رضوی</option>
+                            <option value="Semnan">سمنان</option>
+                            <option value="Sistan and Baluchestan">سیستان و بلوچستان</option>
+                            <option value="South Khorasan">خراسان جنوبی</option>
+                            <option value="Tehran">تهران</option>
+                            <option value="West Azerbaijan">آذربایجان غربی</option>
+                            <option value="Yazd">یزد</option>
+                            <option value="Zanjan">زنجان</option>
+                            <option value="Hormozgan">هرمزگان</option>
+                        </select>
+                    </label>
+                        <br>
+                    <label>شهرستان
+                        <select id="adm2_en">
+                            <option value="" disabled selected>انتخاب شهرستان</option>
+                            <option value="Abadan">آبادان</option>
+                            <option value="Abadeh">آباده</option>
+                            <option value="Abarkuh">ابرکوه</option>
+                            <option value="Abbasabad">عباس آباد</option>
+                            <option value="Abdanan">آبدانان</option>
+                            <option value="Abhar">ابهر</option>
+                            <option value="Abumusa">ابوموسی</option>
+                            <option value="'Abyek">آبیک</option>
+                            <option value="Aghajari">آقاجاری</option>
+                            <option value="Ahar">اهر</option>
+                            <option value="Ahvaz">اهواز</option>
+                            <option value="Ajabshir">عجب شیر</option>
+                            <option value="Alborz">البرز</option>
+                            <option value="Aliabad">علی آباد</option>
+                            <option value="Aligudarz">الیگودرز</option>
+                            <option value="Amlash">املش</option>
+                            <option value="Amol">آمل</option>
+                            <option value="Anar">انار</option>
+                            <option value="Anbarabad">عنبرآباد</option>
+                            <option value="Andika">اندیکا</option>
+                            <option value="Andimeshk">اندیمشک</option>
+                            <option value="Aqqala">اقلا</option>
+                            <option value="Aradan">آرادان</option>
+                            <option value="Arak">اراک</option>
+                            <option value="Aran-o-Bidgol">آران و بیدگل</option>
+                            <option value="Ardabil">اردبیل</option>
+                            <option value="Ardal">اردل</option>
+                            <option value="Ardekan">اردکان</option>
+                            <option value="Ardestan">اردستان</option>
+                            <option value="Arsanjan">ارسنجان</option>
+                            <option value="Arzuiyeh">ارزوئیه</option>
+                            <option value="Asadabad">اسدآباد</option>
+                            <option value="Asaluyeh">عسلویه</option>
+                            <option value="Ashkezar">اشکذر</option>
+                            <option value="Ashtian">آشتیان</option>
+                            <option value="Astane-ye-Ashrafiyeh">آستانه اشرفیه</option>
+                            <option value="Astara">آستارا</option>
+                            <option value="Avaj">آوج</option>
+                            <option value="Azadshahr">آزادشهر</option>
+                            <option value="Azarshahr">آذرشهر</option>
+                            <option value="Azna">ازنا</option>
+                            <option value="Babol">بابل</option>
+                            <option value="Babolsar">بابلسر</option>
+                            <option value="Badre">بدره</option>
+                            <option value="Bafq">بافق</option>
+                            <option value="Baft">بافت</option>
+                            <option value="Baghmalek">باغ ملک</option>
+                            <option value="Bahabad">بهاباد</option>
+                            <option value="Bahar">بهار</option>
+                            <option value="Baharestan">بهارستان</option>
+                            <option value="Bahmai">بهمئی</option>
+                            <option value="Bajestan">بجستان</option>
+                            <option value="Bakharz">باخرز</option>
+                            <option value="Bam">بم</option>
+                            <option value="Bandar-Abbas">بندرعباس</option>
+                            <option value="Bandar-e-Anzali">بندرانزلی</option>
+                            <option value="Bandar-e-Gaz">بندر گز</option>
+                            <option value="Bandar-Lengeh">بندرلنگه</option>
+                            <option value="Baneh">بانه</option>
+                            <option value="Bardaskan">بردسکن</option>
+                            <option value="Bardsir">بردسیر</option>
+                            <option value="Bashagard">بشاگرد</option>
+                            <option value="Basht">باشت</option>
+                            <option value="Bastak">بستک</option>
+                            <option value="Bavanat">بوانات</option>
+                            <option value="Bavi">باوی</option>
+                            <option value="Behbahan">بهبهان</option>
+                            <option value="Behshahr">بهشهر</option>
+                            <option value="Ben">بن</option>
+                            <option value="Bijar">بیجار</option>
+                            <option value="Bilasavar">بیله سوار</option>
+                            <option value="Birjand">بیرجند</option>
+                            <option value="Bojnurd">بجنورد</option>
+                            <option value="Bonab">بناب</option>
+                            <option value="Booeino Miyandasht">بویین میاندشت</option>
+                            <option value="Borkhar">بورخوار</option>
+                            <option value="Borujen">بروجن</option>
+                            <option value="Borujerd">بروجرد</option>
+                            <option value="Boshruyeh">بشرویه</option>
+                            <option value="Bostanabad">بستان آباد</option>
+                            <option value="Buin-Zahra">بویین زهرا</option>
+                            <option value="Bukan">بوکان</option>
+                            <option value="Bushehr">بوشهر</option>
+                            <option value="Chabahar">چابهار</option>
+                            <option value="Chadegan">شادگان</option>
+                            <option value="Chaldoran">چالدران</option>
+                            <option value="Chalus">چالوس</option>
+                            <option value="Charam">چرام</option>
+                            <option value="Charuymaq">چاراویماق</option>
+                            <option value="Chaypareh">چایپاره</option>
+                            <option value="Chenaran">چناران</option>
+                            <option value="Dalaho">دالاهو</option>
+                            <option value="Dalgan">دلگان</option>
+                            <option value="Damavand">دماوند</option>
+                            <option value="Damghan">دامغان</option>
+                            <option value="Darab">داراب</option>
+                            <option value="Dargaz">درگز</option>ُ
+                            <option value="Darmian">درمیان</option>ُ
+                            <option value="Darreh Shahr">دره شهر</option>ُ
+                            <option value="Dasht-e-Azadegan">دشت آزادگان</option>ُ
+                            <option value="Dashtestan">دشتستان</option>ُ
+                            <option value="Dashti">دشتی</option>ُ
+                            <option value="Davarzan">داورزن</option>ُ
+                            <option value="Dayyer">دیر</option>ُ
+                            <option value="Dehaghan">دهاقان</option>ُ
+                            <option value="Dehgolan">دهگلان</option>ُ
+                            <option value="Dehloran'">دهلران</option>ُ
+                            <option value="Delfan">دلفان</option>ُ
+                            <option value="Delijan">دلیجان</option>ُ
+                            <option value="Dena">دنا</option>ُ
+                            <option value="Deylam">دیلم</option>ُ
+                            <option value="Dezful">دزفول</option>ُ
+                            <option value="Divandarreh">دیواندره</option>ُ
+                            <option value="Dorud">درود</option>ُ
+                            <option value="Doureh">دوره</option>ُ
+                            <option value="Eejrud">ایجرود</option>ُ
+                            <option value="Eqlid">اقلید</option>ُ
+                            <option value="Esfarayen">اسفراین</option>ُ
+                            <option value="Eshtehard">اشتهارد</option>ُ
+                            <option value="Estahban">استهبان</option>ُ
+                            <option value="Eyvan">ایوان</option>ُ
+                            <option value="Fahraj">فهرج</option>ُ
+                            <option value="Falavarjan">فلاورجان</option>ُ
+                            <option value="Famenin">فامنین</option>ُ
+                            <option value="Fanouj">فنوج</option>ُ
+                            <option value="Farahan">فرهان</option>ُ
+                            <option value="Farashband">فراشبند</option>ُ
+                            <option value="Fardis">فردیس</option>ُ
+                            <option value="Faridan">فریدن</option>ُ
+                            <option value="Fariman">فریمان</option>ُ
+                            <option value="Faroj">فاروج</option>ُ
+                            <option value="Farsan">فارسان</option>ُ
+                            <option value="Faryab">فاریاب</option>ُ
+                            <option value="Fasa">فسا</option>ُ
+                            <option value="Ferdows">فردوس</option>ُ
+                            <option value="Feredunkenar">فریدون کنار</option>ُ
+                            <option value="Fereydunshahr">فریدون شهر</option>ُ
+                            <option value="Firuzabad">فیروزآباد</option>ُ
+                            <option value="Firuzeh">فیروزه</option>ُ
+                            <option value="Firuzkuh">فیروزکوه</option>ُ
+                            <option value="Fuman">فومن</option>ُ
+                            <option value="Gachsaran">گچساران</option>ُ
+                            <option value="Galikash">گالیکش</option>ُ
+                            <option value="Galugah">گلوگاه</option>ُ
+                            <option value="Ganaveh">گناوه</option>ُ
+                            <option value="Garmsar">گرمسار</option>ُ
+                            <option value="Gerash">گراش</option>ُ
+                            <option value="Germeh">گرمه</option>ُ
+                            <option value="Germi">گرمی</option>ُ
+                            <option value="Ghaleye-Ganj">قلعه گنج</option>ُ
+                            <option value="Ghasre Ghand">قصر قند</option>ُ
+                            <option value="Gilan-e-Gharb">گیلان غرب</option>ُ
+                            <option value="Golpayegan">گلپایگان</option>ُ
+                            <option value="Gomishan">گمیشان</option>ُ
+                            <option value="Gonabad">گناباد</option>ُ
+                            <option value="Gonbad-e-Kavus">گنبد کاووس</option>ُ
+                            <option value="Gorgan">گرگان</option>ُ
+                            <option value="Guotvand">گتوند</option>ُ
+                            <option value="Haftgol">هفت گل</option>ُ
+                            <option value="Hajiabad">حاجی آباد</option>ُ
+                            <option value="Hamadan">همدان</option>ُ
+                            <option value="Hamidieh">حمیدیه</option>ُ
+                            <option value="Hamoun">هامون</option>ُ
+                            <option value="Harsin">هرسین</option>ُ
+                            <option value="Hashtrud">هشترود</option>ُ
+                            <option value="Hendijan">هندیجان</option>ُ
+                            <option value="Heris">هریس</option>ُ
+                            <option value="Hirmand">هیرمند</option>ُ
+                            <option value="Hoveizeh">هویزه</option>ُ
+                            <option value="Ilam">ایلام</option>ُ
+                            <option value="Iranshahr">ایرانشهر</option>ُ
+                            <option value="Isfahan">اصفهان</option>ُ
+                            <option value="Islamabad-e-Gharb">اسلام آباد غرب</option>ُ
+                            <option value="Islamshahr">اسلامشهر</option>ُ
+                            <option value="Izeh">ایذه</option>ُ
+                            <option value="Jahrom">جهرم</option>ُ
+                            <option value="Jajrom">جاجرم</option>ُ
+                            <option value="Jam">جم</option>ُ
+                            <option value="Jask">جاسک</option>ُ
+                            <option value="Javanrud">جوانرود</option>ُ
+                            <option value="Jiroft">جیرفت</option>ُ
+                            <option value="Joghatai">جغتای</option>ُ
+                            <option value="Jolfa">جلفا</option>ُ
+                            <option value="Jowayin">جوین</option>ُ
+                            <option value="Juybar">جویبار</option>ُ
+                            <option value="Kabudarahang">کبودرآهنگ</option>ُ
+                            <option value="Kahnuj">کهنوج</option>ُ
+                            <option value="Kalat">کلات</option>ُ
+                            <option value="Kalibar">کلیبر</option>ُ
+                            <option value="Kamyaran">کامیاران</option>ُ
+                            <option value="Kangan">کنگان</option>ُ
+                            <option value="Kangavar">کنگاور</option>ُ
+                            <option value="Karaj">کرج</option>ُ
+                            <option value="Karoun">کارون</option>ُ
+                            <option value="Kashan">کاشان</option>ُ
+                            <option value="Kashmar">کاشمر</option>ُ
+                            <option value="Kavar">کوار</option>ُ
+                            <option value="Kazerun">کازرون</option>ُ
+                            <option value="Kelardasht">کلاردشت</option>ُ
+                            <option value="Kerman">کرمان</option>ُ
+                            <option value="Kermanshah">کرمانشاه</option>ُ
+                            <option value="Khaf">خاف</option>ُ
+                            <option value="Khalilabad">خلیل آباد</option>ُ
+                            <option value="Khalkhal">خلخال</option>ُ
+                            <option value="Khamir">خمیر</option>ُ
+                            <option value="Khansar">خوانسار</option>ُ
+                            <option value="Khash">خاش</option>ُ
+                            <option value="Khatam">خاتم</option>ُ
+                            <option value="Kherameh">خرامه</option>ُ
+                            <option value="Khodaafarin">خداآفرین</option>ُ
+                            <option value="Khodabandeh">خدابنده</option>ُ
+                            <option value="Khomein">خمین</option>ُ
+                            <option value="Khomeinishahr">خمینی شهر</option>ُ
+                            <option value="Khondab">خنداب</option>ُ
+                            <option value="Khonj">خنج</option>ُ
+                            <option value="Khorobiyabanak">خور بیابانک</option>ُ
+                            <option value="Khorramabad">خرم آباد</option>ُ
+                            <option value="Khorrambid">خرم بید</option>ُ
+                            <option value="Khorramdarreh">خرمدره</option>ُ
+                            <option value="Khorramshahr">خرمشهر</option>ُ
+                            <option value="Khoshab">خوشاب</option>ُ
+                            <option value="Khoy">خوی</option>ُ
+                            <option value="Khusf">خوسف</option>ُ
+                            <option value="Kiaar">کیار</option>ُ
+                            <option value="Kohgeluyeh">کهگیلویه</option>ُ
+                            <option value="Kolaleh">کلاله</option>ُ
+                            <option value="Komeijan">کمیجان</option>ُ
+                            <option value="Konarak">کنارک</option>ُ
+                            <option value="Kordkuy">کردکوی</option>ُ
+                            <option value="Kowsar">کوثر</option>ُ
+                            <option value="Kuhbonan">کوهبنان</option>ُ
+                            <option value="Kuhdasht">کوهدشت</option>ُ
+                            <option value="Kuhrang">کوهرنگ</option>ُ
+                            <option value="Lahijan">لاهیجان</option>ُ
+                            <option value="Lali">لالی</option>ُ
+                            <option value="Lamerd">لامرد</option>ُ
+                            <option value="Landeh">لنده</option>ُ
+                            <option value="Langrud">لنگرود</option>ُ
+                            <option value="Larestan">لارستان</option>ُ
+                            <option value="Lenjan">لنجان</option>ُ
+                            <option value="Lordegan">لردگان</option>ُ
+                            <option value="Mahabad">مهاباد</option>ُ
+                            <option value="Mahallat">محلات</option>ُ
+                            <option value="Mahmudabad">محمودآباد</option>ُ
+                            <option value="Mahneshan">ماهنشان</option>ُ
+                            <option value="Mahshahr">ماهشهر</option>ُ
+                            <option value="Mahvelat">مه ولات</option>ُ
+                            <option value="Maku">ماکو</option>ُ
+                            <option value="Malard">ملارد</option>ُ
+                            <option value="Malayer">ملایر</option>ُ
+                            <option value="Malekan">ملکان</option>ُ
+                            <option value="Malekshahi">ملکشاهی</option>ُ
+                            <option value="Mamasani">ممسنی</option>ُ
+                            <option value="Maneh-o-Samalqan">مانه و سملقان</option>ُ
+                            <option value="Manujan">منوجان</option>ُ
+                            <option value="Maragheh">مراغه</option>ُ
+                            <option value="Marand">مرند</option>ُ
+                            <option value="Maravehtapeh">مراوه تپه</option>ُ
+                            <option value="Marivan">مریوان</option>ُ
+                            <option value="Marvdasht">مرودشت</option>ُ
+                            <option value="Masal">ماسال</option>ُ
+                            <option value="Mashhad">مشهد</option>ُ
+                            <option value="Masjed-Soleyman">مسجد سلیمان</option>ُ
+                            <option value="Mehdishahr">مهدی شهر</option>
+                            <option value="Mehr">مهر</option>
+                            <option value="Mehran">مهران</option>ُ
+                            <option value="Mehrestan">مهرستان</option>ُ
+                            <option value="Mehriz">مهریز</option>ُ
+                            <option value="Meshginshahr">مشگین شهر</option>ُ
+                            <option value="Meyami">میامی</option>ُ
+                            <option value="Meybod">میبد</option>ُ
+                            <option value="Miandoab">میاندوآب</option>ُ
+                            <option value="Miandorud">میاندورود</option>ُ
+                            <option value="Mianeh">میانه</option>ُ
+                            <option value="Minab">میناب</option>ُ
+                            <option value="Minudasht">مینودشت</option>ُ
+                            <option value="Mirjaveh">میرجاوه</option>ُ
+                            <option value="Mobarakeh">مبارکه</option>ُ
+                            <option value="Nahavand">نهاوند</option>ُ
+                            <option value="Nain">نائین</option>ُ
+                            <option value="Najafabad">نجف آباد</option>ُ
+                            <option value="Namin">نمین</option>ُ
+                            <option value="Naqadeh">نقده</option>ُ
+                            <option value="Natanz">نطنز</option>ُ
+                            <option value="Nazarabad">نظرآباد</option>ُ
+                            <option value="Nehbandan">نهبندان</option>ُ
+                            <option value="Neka">نکا</option>ُ
+                            <option value="Neyriz">نی ریز</option>ُ
+                            <option value="Nikshahr">نیک شهر</option>ُ
+                            <option value="Nimrouz">نیمروز</option>ُ
+                            <option value="Nir">نیر</option>ُ
+                            <option value="Nishapur">نیشابور</option>ُ
+                            <option value="Normashir">نرماشیر</option>ُ
+                            <option value="Northern Savadkooh">شمال سواد کوه</option>ُ
+                            <option value="Noshahr">نوشهر</option>ُ
+                            <option value="Nur">نور</option>ُ
+                            <option value="Omidiyeh">امیدیه</option>ُ
+                            <option value="Oshnaviyeh">اشنویه</option>ُ
+                            <option value="Osku">اسکو</option>ُ
+                            <option value="Pakdasht">پاکدشت</option>ُ
+                            <option value="Pardis">پردیس</option>ُ
+                            <option value="Parsabad">پارس آباد</option>ُ
+                            <option value="Parsian">پارسیان</option>ُ
+                            <option value="Pasargad">پاسارگاد</option>ُ
+                            <option value="Paveh">پاوه</option>ُ
+                            <option value="Piranshahr">پیران شهر</option>ُ
+                            <option value="Pishva">پیشوا</option>ُ
+                            <option value="Poldasht">پلدشت</option>ُ
+                            <option value="Poldokhtar">پلدختر</option>ُ
+                            <option value="Qaemshahr">قائم شهر</option>ُ
+                            <option value="Qaen">قائن</option>ُ
+                            <option value="Qarchak">قرچک</option>ُ
+                            <option value="Qasr-e-Shirin">قصرشیرین</option>ُ
+                            <option value="Qazvin">قزوین</option>ُ
+                            <option value="Qeshm">قشم</option>ُ
+                            <option value="Qir-o-Karzin">قیر و کارزین</option>ُ
+                            <option value="Qom">قم</option>ُ
+                            <option value="Qorveh">قروه</option>ُ
+                            <option value="Quchan">قوچان</option>ُ
+                            <option value="Rabar">رابر</option>ُ
+                            <option value="Rafsanjan">رفسنجان</option>ُ
+                            <option value="Ramhormoz">رامهرمز</option>ُ
+                            <option value="Ramian">رامیان</option>ُ
+                            <option value="Ramsar">رامسر</option>ُ
+                            <option value="Ramshir">رامشیر</option>ُ
+                            <option value="Rasht">رشت</option>ُ
+                            <option value="Rashtkhar">رشتخوار</option>ُ
+                            <option value="Ravansar">روانسر</option>ُ
+                            <option value="Ravar">راور</option>ُ
+                            <option value="Razan">رزن</option>ُ
+                            <option value="Razo Jalgelan">راز و جرگلان</option>ُ
+                            <option value="Rey">ری</option>ُ
+                            <option value="Rezvanshahr">رضوان شهر</option>ُ
+                            <option value="Rigan">ریگان</option>ُ
+                            <option value="Robat-Karim">رباط کریم</option>ُ
+                            <option value="Romeshkan">رومشکان</option>ُ
+                            <option value="Rostam">رستم</option>ُ
+                            <option value="Roudbar-e-Jonub">رودبار جنوب</option>ُ
+                            <option value="Rudan">رودان</option>ُ
+                            <option value="Rudbar">رودبار</option>ُ
+                            <option value="Rudsar">رودسر</option>ُ
+                            <option value="Sabzevar">سبزوار</option>ُ
+                            <option value="Sahneh">صحنه</option>ُ
+                            <option value="Salmas">سلماس</option>ُ
+                            <option value="Saman">سامان</option>ُ
+                            <option value="Sannandaj">سنندج</option>ُ
+                            <option value="Saqqez">سقز</option>ُ
+                            <option value="Sarab">سراب</option>ُ
+                            <option value="Sarakhs">سرخس</option>ُ
+                            <option value="Saravan">سراوان</option>ُ
+                            <option value="Sarayan">سرایان</option>ُ
+                            <option value="Sarbaz">سرباز</option>ُ
+                            <option value="Sarbisheh">سراب بیشه</option>ُ
+                            <option value="Sardasht">سردشت</option>ُ
+                            <option value="Sareyn">سرعین</option>ُ
+                            <option value="Sari">ساری</option>ُ
+                            <option value="Sarpol-e-Zahab">سرپل ذهاب</option>ُ
+                            <option value="Sarvabad">سروآباد</option>ُ
+                            <option value="Sarvestan">سروستان</option>ُ
+                            <option value="Savadkuh">سوادکوه</option>ُ
+                            <option value="Saveh">ساوه</option>ُ
+                            <option value="Savojbolagh">ساوجبلاغ</option>ُ
+                            <option value="Selseleh">سلسله</option>ُ
+                            <option value="Semirom">سمیرم</option>ُ
+                            <option value="Semnan">سمنان</option>ُ
+                            <option value="Sepidan">سپیدان</option>ُ
+                            <option value="Shabestar">شبستر</option>ُ
+                            <option value="Shadegan">شادگان</option>ُ
+                            <option value="Shaft">شفت</option>ُ
+                            <option value="Shahindej">شاهین دژ</option>ُ
+                            <option value="Shahinshahro Meymeh">شاهین شهر و میمه</option>ُ
+                            <option value="Shahr-e-Babak">شهربابک</option>ُ
+                            <option value="Shahr-e Qods">شهرقدس</option>ُ
+                            <option value="Shahrekord">شهرکرد</option>ُ
+                            <option value="Shahreza">شهرضا</option>ُ
+                            <option value="Shahriar">شهریار</option>ُ
+                            <option value="Shahrud">شاهرود</option>ُ
+                            <option value="Shazand">شازند</option>ُ
+                            <option value="Shemiranat">شمیرانات</option>ُ
+                            <option value="Shiraz">شیراز</option>ُ
+                            <option value="Shirvan">شیروان</option>ُ
+                            <option value="Shirvan-o-Chardavol">شیروان چرداول</option>ُ
+                            <option value="Showt">شوط</option>ُ
+                            <option value="Shush">شوش</option>ُ
+                            <option value="Shushtar">شوشتر</option>ُ
+                            <option value="Siahkal">سیاهکل</option>ُ
+                            <option value="Sibo Soran">سیب و سوران</option>ُ
+                            <option value="Simorgh">سیمرغ</option>ُ
+                            <option value="Sirik">سیریک</option>ُ
+                            <option value="Sirjan">سیرجان</option>ُ
+                            <option value="Sirvan">سیروان</option>ُ
+                            <option value="Solas-e-Babajani">ثلالث باباجانی</option>ُ
+                            <option value="Soltanieh">سلطانیه</option>ُ
+                            <option value="Some''e-Sara">صومعه سرا</option>ُ
+                            <option value="Sonqor">سنقر</option>ُ
+                            <option value="Sorkheh">سرخه</option>ُ
+                            <option value="Tabas">طبس</option>ُ
+                            <option value="Tabriz">تبریز</option>ُ
+                            <option value="Tafresh">تفرش</option>ُ
+                            <option value="Taft">تفت</option>ُ
+                            <option value="Takab">تکاب</option>ُ
+                            <option value="Takestan">تاکستان</option>ُ
+                            <option value="Taleghan">طالقان</option>ُ
+                            <option value="Talesh">تالش</option>ُ
+                            <option value="Tangestan">تنگستان</option>ُ
+                            <option value="Tarom">طارم</option>ُ
+                            <option value="Taybad">تایباد</option>ُ
+                            <option value="Tehran">تهران</option>ُ
+                            <option value="Tiran-o-Korun">تیران و کرون</option>ُ
+                            <option value="Tonekabon">تنکابن</option>ُ
+                            <option value="Torbat-e-Heydarieh">تربت حیدریه</option>ُ
+                            <option value="Torbat-e-Jam">تربت جام</option>ُ
+                            <option value="Torghabe-o-Shandiz">طرقبه و شاندیز</option>ُ
+                            <option value="Tuyserkan">تویسرکان</option>ُ
+                            <option value="Urumia">ارومیه</option>ُ
+                            <option value="Varamin">ورامین</option>ُ
+                            <option value="Varzaqan">ورزقان</option>ُ
+                            <option value="Yasooj">یاسوج</option>ُ
+                            <option value="Yazd">یزد</option>ُ
+                            <option value="Zabol">زابل</option>ُ
+                            <option value="Zahedan">زاهدان</option>ُ
+                            <option value="Zanjan">زنجان</option>ُ
+                            <option value="Zarand">زرند</option>ُ
+                            <option value="Zarandieh">زرندیه</option>ُ
+                            <option value="Zarrindasht">زرین دشت</option>ُ
+                            <option value="Zave">زاوه</option>ُ
+                            <option value="Zehak">ضحک</option>ُ
+                            <option value="Zirkouh">زیرکوه</option>ُ
+                        </select>
+                    </label>
+                    <br>
+
+                    <label>اطمینان
+                        <select id="confidence">
+                            <option value="" disabled selected>انتخاب سطح اطمینان</option>
+                            <option value="l">کم</option>
+                            <option value="h">متوسط</option>
+                            </select>
+                    </label>
+
+
+                    
+
+                    
+                    
+                    <button onclick="updateLayer()">اعمال فیلتر</button>
+                </div>
+            <span class="icon" data-tooltip="ریسک حریق" id="riskIcon"><ion-icon name="warning"></ion-icon></span>
+                <p class="head2" id="risktest">ریسک حریق</p>
+                <p class="head2_2" id="risktest2">آخرین به روز رسانی 1403/12/15</p>
+                <label class="label_date" id="label_date">تاریخ</label>
+                <input type="date" id="customDate" name="customDate">
+
+            <span class="icon" data-tooltip="سطح سوخته" id="surfIcon"><ion-icon name="bonfire"></ion-icon></span>
+                <p class="head3" id="surf">سطح سوخته</p>
+                <p class="head3_2" id="surf2">آخرین به روز رسانی 1403/12/15</p>
+            <span class="icon layer-switcher" data-tooltip="لایه ها" id="layers"><ion-icon name="logo-buffer"></ion-icon></span>
+                <p class="head4" id="layer">لایه ها</p>
+                <div id="l" class="layer-switcher__content"></div>
+                <div class="background">
+                    <p class="maptext">ماهواره</p>
+                    <button id="basemapWMS" value="WMS"></button>
+                    <br>
+                    <p class="maptext">نقشه</p>
+                    <button id="basemapOSM" value="OSM"></button>
+                </div>
+              
+
+                  
+            
+           
+            
+        </div>  
+    </div>
+
+    <div class="toggle-btn" id="toggleSidebar"><ion-icon name="arrow-dropleft"></ion-icon></div>
+
+    
+ <div class="ribbon_top">
+
+    <div class="img1">
+        <span class="title">سامانه پایش آتش سوزی</span>
+        <div class="img"></div>
+    </div>
+        <button class="btn" onclick="window.location.href = '/dashboard/';">داشبورد</button>
+        <button class="guide" onclick="window.location.href = '/guidance/';">راهنما</button>
+        <button class="about" onclick="window.location.href = '/about/';">درباره سامانه</button>
+ </div>
+
+
+ <div id="map"></div>
+
+
+   <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+
+   <script src="{% static 'assets/app.js' %}"></script>
+</body>
+</html> 

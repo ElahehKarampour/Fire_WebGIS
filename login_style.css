@@ -1,0 +1,178 @@
+*{
+    box-sizing: inherit;
+}
+
+html {
+    box-sizing: border-box;
+}
+
+.title{
+    position: relative;
+    top: 0px;
+    width: 930px;
+    height: 220px;
+    left: 160px;
+    border: black;
+    /* text-align:center; */
+    font-size: smaller;
+    background-image: url(./imgs/logo-removebg.png);
+    background-repeat: no-repeat;
+}
+.logo_title{
+    display: inline-block;
+    z-index: 1000;
+    position: absolute;
+    top: 10px;
+}
+.login {
+    width: 300px;
+    gap: 0;
+}
+
+.login__header {
+    background-color: rgba(138, 43, 226, 0.5);
+    border-top-left-radius:0.5em;
+    border-top-right-radius: 0.5em;
+    color: #fff;
+    width: 400px;
+    height: 200px;
+    top: 200px;
+    gap: 0;
+    opacity: 1;
+    text-align: center;
+    padding: 1.25em 0.0em;
+    margin-bottom: 0;
+    padding-bottom: 0; 
+}
+
+.login__header:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.login__header:last-child {
+    margin-bottom: 0;
+}
+
+.login h2 .icon {
+    margin-right: 14px;
+}
+
+.login__form {
+    background-color:rgba(138, 43, 226, 0.5);
+    border-bottom-left-radius:0.5em;
+    border-bottom-right-radius: 0.5em;
+    color: white;
+    display:grid;
+    width: 400px;
+    gap: 0;
+    height: 400px;
+    margin-top: 0;
+    opacity: 1;
+    padding: 0em 1.525em;
+    direction: rtl;
+   
+}
+
+.login input {
+    border-radius: 0.1875em;
+    margin-top: 0px;
+}
+
+.login input[type='username'],
+.login input[type='password'] {
+    background-color: #eee;
+    color: #777;
+    padding: 1.50em 1.50em;
+    width: 100%;
+    direction: rtl;
+} 
+
+.login input[type='submit'] {
+    display: block;
+    /* margin: 0 auto; */
+    margin-top: 0px;
+}
+
+.errors{
+    color: red;
+    font-weight: bolder;
+}
+
+.password{
+    margin-top: 10px;
+}
+
+.register{
+    margin-top: 0px;
+}
+
+.icon2 {
+    fill: currentColor;
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+}
+
+.icons {
+    display: none;
+}
+
+.button:focus,
+.button:hover {
+    background-color: #28ad63;
+}
+
+.button {
+    background-color: #33cc77;
+    color: #fff;
+    padding: 0.25em 1.5em;
+    width: 320px;
+}
+.align {
+    display: grid;
+    place-items: center;
+}
+svg {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+input {
+    background-image: none;
+    border: none;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s;
+}
+
+/* .smaneh_head{
+    padding-top: 70px;
+    padding-right: 700px;
+    font-size: medium;
+    
+} */
+body {
+    background-image: url(./imgs/background2.PNG);
+    background-repeat: no-repeat;
+    /* font-family: 'Varela Round', sans-serif; */
+    line-height: 1.5;
+    margin: 0;
+    min-block-size: 100vh;
+    padding: 5vmin;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+
+}
+
+.samaneh{
+    top: 30px;
+    padding-right: 200px;
+    
+
+}
