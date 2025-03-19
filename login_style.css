@@ -13,7 +13,6 @@ html {
     height: 220px;
     left: 160px;
     border: black;
-    /* text-align:center; */
     font-size: smaller;
     background-image: url(./imgs/logo-removebg.png);
     background-repeat: no-repeat;
@@ -90,7 +89,6 @@ html {
 
 .login input[type='submit'] {
     display: block;
-    /* margin: 0 auto; */
     margin-top: 0px;
 }
 
@@ -146,13 +144,6 @@ input {
     padding: 0;
     transition: all 0.3s;
 }
-
-/* .smaneh_head{
-    padding-top: 70px;
-    padding-right: 700px;
-    font-size: medium;
-    
-} */
 body {
     background-image: url(./imgs/background2.PNG);
     background-repeat: no-repeat;
@@ -167,12 +158,8 @@ body {
     background-size: cover;
     background-position: center;
     overflow: hidden;
-
 }
-
 .samaneh{
     top: 30px;
     padding-right: 200px;
-    
-
 }
