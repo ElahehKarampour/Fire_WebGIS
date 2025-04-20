@@ -1,7 +1,7 @@
 # Fire_WebGIS
 This application displays wildfire points based on applied filters, including:
 
--Fire start and end dates
+-Fire start and end dates\br
 -Time of observation (day or night)
 -Sensor type
 -Province
